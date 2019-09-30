@@ -149,9 +149,9 @@ void sendDataToOpenGL()
 
 	// Set up view transformation
 	mat4 view = lookAt(
-		vec3(1.2f, 1.2f, 1.2f),	// Position of the camera
-		vec3(0.0f, 0.0f, 0.0f),	// The point to be centered on-screen
-		vec3(0.0f, 0.0f, 1.0f)	// The up axis
+		vec3(0.0f, -1.5f,  1.0f),	// Position of the camera
+		vec3(0.0f,  0.0f,  0.0f),	// The point to be centered on-screen
+		vec3(0.0f,  1.0f,  0.0f)	// The up axis
 	);
 	GLint uniView = glGetUniformLocation(programID, "view");
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, value_ptr(view));
@@ -172,7 +172,7 @@ void paintGL(void)
 
 	// Transformation
 	mat4 model = mat4(1.0f);
-	model = rotate(model, glm::radians(180.0f), vec3(0.0f, 0.0f, 1.0f));
+	//model = rotate(model, glm::radians(0.0f), vec3(0.0f, 0.0f, 1.0f));
 
 	GLint uniTrans = glGetUniformLocation(programID, "model");
 	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
