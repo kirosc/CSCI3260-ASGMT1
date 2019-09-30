@@ -147,29 +147,20 @@ void sendDataToOpenGL()
 
 	/*GLint posAttrib = glGetAttribLocation(programID, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	GLint colAttrib = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));*/
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));*/
 
 }
 
 void paintGL(void)
 {
-	GLint uniTrans = glGetUniformLocation(programID, "trans");
 	//TODO:
 	//render your objects and control the transformation here
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	glm::mat4 modelTransformMatrix = glm::mat4(1.0f);
-	modelTransformMatrix = glm::translate(glm::mat4(),
-		glm::vec3(0.0f, 0.0f, 0.0f));;
-	GLint modelTransformMatrixUniformLocation =
-		glGetUniformLocation(programID, "modelTransformMatrix");
-	glUniformMatrix4fv(modelTransformMatrixUniformLocation, 1,
-		GL_FALSE, &modelTransformMatrix[0][0]);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
