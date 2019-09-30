@@ -7,6 +7,7 @@
 #include "Dependencies\freeglut\freeglut.h"
 #include "Dependencies\glm\glm.hpp"
 #include "Dependencies\glm\gtc\matrix_transform.hpp"
+#include "Dependencies\glm\gtc\type_ptr.hpp"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -110,79 +111,67 @@ void sendDataToOpenGL()
 	//TODO:
 	//create point, line, 2D object and 3D object here and bind to VAOs & VBOs
 
-	//const GLfloat ground[] = {
-	//	// X	 Y		Z		 R		  G		   B
-	//	-1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-	//	-1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-	//	 1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-	//	-1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-	//	 1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-	//	 1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f
-	//};
-
-	//glGenVertexArrays(1, &groundVAO);
-	//glBindVertexArray(groundVAO);
-	//glGenBuffers(1, &groundVBO);
-	//glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-	//glEnableVertexAttribArray(1);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
-
-	const GLfloat triangle[] =
-	{
-		-0.5f, -0.5f, +0.0f, //left
-		+1.0f, +0.0f, +0.0f, //color
-
-		+0.5f, -0.5f, +0.0f, //right 
-		+1.0f, +0.0f, +0.0f,
-
-		+0.0f, +0.5f, +0.0f, //top 
-		+1.0f, +0.0f, +0.0f,
+	const GLfloat ground[] = {
+		// X	 Y		Z		 R		  G		   B
+		//  Position  Color           
+		-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
 	};
-	GLuint vaoID;
-	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);  //first VAO
-	GLuint vboID;
-	glGenBuffers(1, &vboID);
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	//vertex position
+
+	glGenVertexArrays(1, &groundVAO);
+	glBindVertexArray(groundVAO);
+	glGenBuffers(1, &groundVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
+
+	// Vertex position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-	//vertex color
+	// Vertex color
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Element array
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+
+	GLuint elements[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+	/*GLint posAttrib = glGetAttribLocation(programID, "position");
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+
+	GLint colAttrib = glGetAttribLocation(programID, "color");
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));*/
+
 }
 
 void paintGL(void)
 {
+	GLint uniTrans = glGetUniformLocation(programID, "trans");
 	//TODO:
 	//render your objects and control the transformation here
-
-	// Depth Buffer
-	/*glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-
-	// Scaling
-	/*mat4 trans = mat4(1.0f);
-	trans = scale(trans, vec3(3.0f, 1.0f, 3.0f));*/
-	// glBindVertexArray(groundVAO);
-	// glDrawArrays(GL_TRIANGLES, 0, 6);
-
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glm::mat4 modelTransformMatrix = glm::mat4(1.0f);
 	modelTransformMatrix = glm::translate(glm::mat4(),
-		glm::vec3(0.0, 0.0f, 0.0f));;
+		glm::vec3(0.0f, 0.0f, 0.0f));;
 	GLint modelTransformMatrixUniformLocation =
 		glGetUniformLocation(programID, "modelTransformMatrix");
 	glUniformMatrix4fv(modelTransformMatrixUniformLocation, 1,
 		GL_FALSE, &modelTransformMatrix[0][0]);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6); //render primitives from array data
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glFlush();
 	glutPostRedisplay();
@@ -194,7 +183,7 @@ void initializedGL(void) //run only once
 	installShaders();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	/*Initialization*/
 	glutInit(&argc, argv);
