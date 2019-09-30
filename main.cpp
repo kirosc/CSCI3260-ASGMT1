@@ -126,12 +126,12 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat cube[] = {
-		-0.1f,  0.1f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-Top-left
-		 0.0f,  0.1f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom-Top-right
+		-0.1f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-Top-left
+		 0.0f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom-Top-right
 		 0.0f, -0.1f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-Bottom-right
 		-0.1f, -0.1f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-Bottom-left
-		-0.1f,  0.1f, 0.1f, 1.0f, 0.0f, 0.0f, // Top-Top-left
-		 0.0f,  0.1f, 0.1f, 0.0f, 1.0f, 0.0f, // Top-Top-right
+		-0.1f,  0.0f, 0.1f, 1.0f, 0.0f, 0.0f, // Top-Top-left
+		 0.0f,  0.0f, 0.1f, 0.0f, 1.0f, 0.0f, // Top-Top-right
 		 0.0f, -0.1f, 0.1f, 1.0f, 1.0f, 1.0f, // Top-Bottom-right
 		-0.1f, -0.1f, 0.1f, 0.0f, 0.0f, 1.0f // Top-Bottom-left
 	};
@@ -204,8 +204,6 @@ void sendDataToOpenGL()
 
 	////////////////////////////////////////////////////
 
-
-
 	// Set up view transformation
 	mat4 view = lookAt(
 		vec3(0.0f, -1.5f,  1.0f),	// Position of the camera
@@ -227,7 +225,8 @@ void paintGL(void)
 	//TODO:
 	//render your objects and control the transformation here
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
-	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Transformation
 	mat4 model = mat4(1.0f);
