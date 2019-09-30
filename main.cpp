@@ -14,6 +14,8 @@ using glm::vec3;
 using glm::mat4;
 
 GLint programID;
+GLuint groundVAO;
+GLuint groundVBO;
 
 bool checkStatus(
 	GLuint objectID,
@@ -107,12 +109,80 @@ void sendDataToOpenGL()
 {
 	//TODO:
 	//create point, line, 2D object and 3D object here and bind to VAOs & VBOs
+
+	//const GLfloat ground[] = {
+	//	// X	 Y		Z		 R		  G		   B
+	//	-1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,
+	//	-1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
+	//	 1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,
+	//	-1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
+	//	 1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
+	//	 1.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f
+	//};
+
+	//glGenVertexArrays(1, &groundVAO);
+	//glBindVertexArray(groundVAO);
+	//glGenBuffers(1, &groundVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	const GLfloat triangle[] =
+	{
+		-0.5f, -0.5f, +0.0f, //left
+		+1.0f, +0.0f, +0.0f, //color
+
+		+0.5f, -0.5f, +0.0f, //right 
+		+1.0f, +0.0f, +0.0f,
+
+		+0.0f, +0.5f, +0.0f, //top 
+		+1.0f, +0.0f, +0.0f,
+	};
+	GLuint vaoID;
+	glGenVertexArrays(1, &vaoID);
+	glBindVertexArray(vaoID);  //first VAO
+	GLuint vboID;
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	//vertex position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	//vertex color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 }
 
 void paintGL(void)
 {
 	//TODO:
 	//render your objects and control the transformation here
+
+	// Depth Buffer
+	/*glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
+
+	// Scaling
+	/*mat4 trans = mat4(1.0f);
+	trans = scale(trans, vec3(3.0f, 1.0f, 3.0f));*/
+	// glBindVertexArray(groundVAO);
+	// glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glm::mat4 modelTransformMatrix = glm::mat4(1.0f);
+	modelTransformMatrix = glm::translate(glm::mat4(),
+		glm::vec3(0.0, 0.0f, 0.0f));;
+	GLint modelTransformMatrixUniformLocation =
+		glGetUniformLocation(programID, "modelTransformMatrix");
+	glUniformMatrix4fv(modelTransformMatrixUniformLocation, 1,
+		GL_FALSE, &modelTransformMatrix[0][0]);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6); //render primitives from array data
 
 	glFlush();
 	glutPostRedisplay();
@@ -128,6 +198,8 @@ int main(int argc, char *argv[])
 {
 	/*Initialization*/
 	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGBA);
+	glutInitWindowSize(512, 512);
 	glutCreateWindow("Assignment 1");
 	glewInit();
 

@@ -353,3 +353,4 @@ MigrationBackup/
 
 readme.txt
 x64/
+*.bak
