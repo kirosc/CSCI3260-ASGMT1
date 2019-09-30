@@ -155,6 +155,13 @@ void paintGL(void)
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	// Transformation
+	mat4 model = mat4(1.0f);
+	model = rotate(model, glm::radians(180.0f), vec3(0.0f, 0.0f, 1.0f));
+
+	GLint uniTrans = glGetUniformLocation(programID, "model");
+	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(model));
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glFlush();
