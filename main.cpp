@@ -23,6 +23,8 @@ GLuint cubeVAO;
 GLuint cubeVBO;
 GLuint cubeEBO;
 
+float x_delta = 0.1f;
+int x_press_num = 0;
 
 bool checkStatus(
 	GLuint objectID,
@@ -109,7 +111,14 @@ void installShaders()
 
 void keyboard(unsigned char key, int x, int y)
 {
-	//TODO:
+	if (key == 'a')
+	{
+		x_press_num -= 1;
+	}
+	if (key == 'd')
+	{
+		x_press_num += 1;
+	}
 }
 
 void sendDataToOpenGL()
@@ -228,15 +237,21 @@ void paintGL(void)
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Get reference of model variable
+	GLint uniTrans = glGetUniformLocation(programID, "model");
+
+	// Ground
 	// Transformation
 	mat4 model = mat4(1.0f);
-	model = rotate(model, glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
-
-	GLint uniTrans = glGetUniformLocation(programID, "model");
 	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 
+	// Rendering
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Cube
+	model = rotate(mat4(1.0f), x_delta * x_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 
 	glBindVertexArray(cubeVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
