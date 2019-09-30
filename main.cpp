@@ -112,8 +112,7 @@ void sendDataToOpenGL()
 	//create point, line, 2D object and 3D object here and bind to VAOs & VBOs
 
 	const GLfloat ground[] = {
-		// X	 Y		Z		 R		  G		   B
-		//  Position  Color           
+		// X	 Y	   Z	 R	   G	 B
 		-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Top-left
 		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Top-right
 		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
@@ -125,13 +124,6 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &groundVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
-
-	// Vertex position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-	// Vertex color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 
 	// Element array
 	GLuint ebo;
@@ -145,14 +137,15 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-	/*GLint posAttrib = glGetAttribLocation(programID, "position");
+	// Vertex position
+	GLint posAttrib = glGetAttribLocation(programID, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
+	// Vertex color
 	GLint colAttrib = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));*/
-
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 }
 
 void paintGL(void)
@@ -170,8 +163,8 @@ void paintGL(void)
 
 void initializedGL(void) //run only once
 {
-	sendDataToOpenGL();
 	installShaders();
+	sendDataToOpenGL();
 }
 
 int main(int argc, char* argv[])
