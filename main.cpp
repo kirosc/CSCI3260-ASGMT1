@@ -216,8 +216,8 @@ void sendDataToOpenGL()
 
 	// Set up view transformation
 	mat4 view = lookAt(
-		vec3(0.0f, -1.5f,  1.0f),	// Position of the camera
-		vec3(0.0f,  0.0f,  0.0f),	// The point to be centered on-screen
+		vec3(0.0f, -1.2f,  0.7f),	// Position of the camera
+		vec3(0.0f,  0.5f,  0.0f),	// The point to be centered on-screen
 		vec3(0.0f,  1.0f,  0.0f)	// The up axis
 	);
 	GLint uniView = glGetUniformLocation(programID, "view");
@@ -225,7 +225,7 @@ void sendDataToOpenGL()
 
 	// Create a perspective projection matrix
 	// Specify FOV, aspect ratio, near and far
-	mat4 proj = glm::perspective(glm::radians(45.0f), 512.0f / 512.0f, 1.0f, 10.0f);
+	mat4 proj = glm::perspective(glm::radians(40.0f), 512.0f / 512.0f, 1.0f, 10.0f);
 	GLint uniProj = glGetUniformLocation(programID, "proj");
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, value_ptr(proj));
 }
