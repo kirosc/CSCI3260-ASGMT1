@@ -15,8 +15,14 @@ using glm::vec3;
 using glm::mat4;
 
 GLint programID;
+
 GLuint groundVAO;
 GLuint groundVBO;
+GLuint groundEBO;
+GLuint cubeVAO;
+GLuint cubeVBO;
+GLuint cubeEBO;
+
 
 bool checkStatus(
 	GLuint objectID,
@@ -119,33 +125,86 @@ void sendDataToOpenGL()
 		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
 	};
 
+	const GLfloat cube[] = {
+		-0.1f,  0.1f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-Top-left
+		 0.0f,  0.1f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom-Top-right
+		 0.0f, -0.1f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-Bottom-right
+		-0.1f, -0.1f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-Bottom-left
+		-0.1f,  0.1f, 0.1f, 1.0f, 0.0f, 0.0f, // Top-Top-left
+		 0.0f,  0.1f, 0.1f, 0.0f, 1.0f, 0.0f, // Top-Top-right
+		 0.0f, -0.1f, 0.1f, 1.0f, 1.0f, 1.0f, // Top-Bottom-right
+		-0.1f, -0.1f, 0.1f, 0.0f, 0.0f, 1.0f // Top-Bottom-left
+	};
+
+	// Ground
 	glGenVertexArrays(1, &groundVAO);
 	glBindVertexArray(groundVAO);
 	glGenBuffers(1, &groundVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
+	glGenBuffers(1, &groundEBO); // Element array
 
-	// Element array
-	GLuint ebo;
-	glGenBuffers(1, &ebo);
-
-	GLuint elements[] = {
+	GLuint groundElements[] = {
 		0, 1, 2,
 		2, 3, 0
 	};
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundElements), groundElements, GL_STATIC_DRAW);
 
 	// Vertex position
 	GLint posAttrib = glGetAttribLocation(programID, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	// Vertex color
 	GLint colAttrib = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Cube
+	glGenVertexArrays(1, &cubeVAO);
+	glBindVertexArray(cubeVAO);
+	glGenBuffers(1, &cubeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	glGenBuffers(1, &cubeEBO);
+
+	GLuint cubeElements[] = {
+		// Bottom
+		0, 1, 2,
+		2, 3, 0,
+		// Top
+		4, 5, 6,
+		6, 7, 4,
+		// Right
+		6, 5, 1,
+		1, 2, 6,
+		// Left
+		4, 7, 3,
+		3, 0, 4,
+		// Near
+		7, 6, 2,
+		2, 3, 7,
+		// Far
+		5, 4, 0,
+		0, 1, 5
+	};
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeElements), cubeElements, GL_STATIC_DRAW);
+
+	// Vertex position
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	// Vertex color
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	////////////////////////////////////////////////////
+
+
 
 	// Set up view transformation
 	mat4 view = lookAt(
@@ -172,12 +231,16 @@ void paintGL(void)
 
 	// Transformation
 	mat4 model = mat4(1.0f);
-	//model = rotate(model, glm::radians(0.0f), vec3(0.0f, 0.0f, 1.0f));
+	model = rotate(model, glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
 
 	GLint uniTrans = glGetUniformLocation(programID, "model");
 	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 
+	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindVertexArray(cubeVAO);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	glFlush();
 	glutPostRedisplay();
