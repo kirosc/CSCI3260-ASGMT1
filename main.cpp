@@ -15,6 +15,7 @@ using glm::vec3;
 using glm::mat4;
 
 GLint programID;
+GLint uniTrans;
 
 GLuint groundVAO;
 GLuint groundVBO;
@@ -229,6 +230,18 @@ void sendDataToOpenGL()
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, value_ptr(proj));
 }
 
+// Transform the object based on the given name
+void transform(string name) {
+	mat4 model = mat4(1.0f);
+	if (name == "ground") {
+		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
+	}
+	else if (name == "cube") {
+		model = rotate(mat4(1.0f), x_delta * x_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
+	}
+}
+
 void paintGL(void)
 {
 	//TODO:
@@ -238,21 +251,16 @@ void paintGL(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Get reference of model variable
-	GLint uniTrans = glGetUniformLocation(programID, "model");
+	uniTrans = glGetUniformLocation(programID, "model");
 
 	// Ground
-	// Transformation
-	mat4 model = mat4(1.0f);
-	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 
-	// Rendering
+	transform("ground");
 	glBindVertexArray(groundVAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Rendering
 
 	// Cube
-	model = rotate(mat4(1.0f), x_delta * x_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
-	glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
-
+	transform("cube");
 	glBindVertexArray(cubeVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
