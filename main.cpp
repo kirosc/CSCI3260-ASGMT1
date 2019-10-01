@@ -38,6 +38,8 @@ GLuint rooftopBottomEBO;
 GLuint rooftopTopVAO;
 GLuint rooftopTopVBO;
 GLuint rooftopTopEBO;
+GLuint mountainLeftVAO;
+GLuint mountainLeftVBO;
 
 float x_delta = 0.1f;
 int x_press_num = 0;
@@ -201,9 +203,9 @@ void sendDataToOpenGL()
 
 	const GLfloat mountainLeft[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.2f,  0.5f, 0.62f, 0.431f, 0.525f, 0.317f, // Top
-		 0.2f,  0.5f, 0.60f, 0.431f, 0.525f, 0.317f, // Bottom-right
-		-0.2f,  0.5f, 0.60f, 0.431f, 0.525f, 0.317f  // Bottom-left
+		-0.62f,  0.7f,  0.3f, 0.431f, 0.525f, 0.317f, // Top
+		-0.30f,  0.7f, -0.1f, 0.431f, 0.525f, 0.317f, // Bottom-right
+		-1.00f,  0.7f, -0.1f, 0.431f, 0.525f, 0.317f  // Bottom-left
 	};
 
 	// Indexing
@@ -356,6 +358,19 @@ void sendDataToOpenGL()
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 
+	// Mountain Left
+	glGenVertexArrays(1, &mountainLeftVAO);
+	glBindVertexArray(mountainLeftVAO);
+	glGenBuffers(1, &mountainLeftVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mountainLeftVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(mountainLeft), mountainLeft, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
 	////////////////////////////////////////////////////
 
 	// Set up view transformation
@@ -424,6 +439,10 @@ void paintGL(void)
 	// Rooftop Top
 	glBindVertexArray(rooftopTopVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Mountain Leftt
+	glBindVertexArray(mountainLeftVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glFlush();
 	glutPostRedisplay();
