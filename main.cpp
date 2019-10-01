@@ -26,6 +26,9 @@ GLuint cubeLeftEBO;
 GLuint cubeRightVAO;
 GLuint cubeRightVBO;
 GLuint cubeRightEBO;
+GLuint cubeTopVAO;
+GLuint cubeTopVBO;
+GLuint cubeTopEBO;
 GLuint buildingBottomVAO;
 GLuint buildingBottomVBO;
 GLuint buildingBottomEBO;
@@ -151,17 +154,17 @@ void sendDataToOpenGL()
 		// X	 Y	   Z	 R	   G	 B
 		-0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
 		 0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
-		 0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
-		-0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
+		 0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
+		-0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
 	};
 
 	const GLfloat cubeLeft[] = {
-		-0.2f,  0.0f, 0.00f, 1.0f, 0.0f, 0.0f, // Bottom-Top-left
-		-0.1f,  0.0f, 0.00f, 0.0f, 1.0f, 0.0f, // Bottom-Top-right
+		-0.2f,  0.0f, 0.00f, 1.000f, 0.000f, 0.000f, // Bottom-Top-left
+		-0.1f,  0.0f, 0.00f, 0.000f, 1.000f, 0.000f, // Bottom-Top-right
 		-0.1f, -0.1f, 0.00f, 0.196f, 0.192f, 0.223f, // Bottom-Bottom-right
 		-0.2f, -0.1f, 0.00f, 0.309f, 0.282f, 0.262f, // Bottom-Bottom-left
-		-0.2f,  0.0f, 0.22f, 1.0f, 0.0f, 0.0f, // Top-Top-left
-		-0.1f,  0.0f, 0.22f, 0.0f, 1.0f, 0.0f, // Top-Top-right
+		-0.2f,  0.0f, 0.22f, 1.000f, 0.000f, 0.000f, // Top-Top-left
+		-0.1f,  0.0f, 0.22f, 0.000f, 1.000f, 0.000f, // Top-Top-right
 		-0.1f, -0.1f, 0.22f, 0.235f, 0.215f, 0.203f, // Top-Bottom-right
 		-0.2f, -0.1f, 0.22f, 0.317f, 0.294f, 0.337f  // Top-Bottom-left
 	};
@@ -175,6 +178,17 @@ void sendDataToOpenGL()
 		 0.2f,  0.0f, 0.15f, 0.0f, 1.0f, 0.0f, // Top-Top-right
 		 0.2f, -0.1f, 0.15f, 0.235f, 0.215f, 0.203f, // Top-Bottom-right
 		 0.1f, -0.1f, 0.15f, 0.317f, 0.294f, 0.337f  // Top-Bottom-left
+	};
+
+	const GLfloat cubeTop[] = {
+		 0.20f, -0.10f, 0.15f, 0.235f, 0.215f, 0.203f, // Bottom-Top-left X
+		 0.20f,  0.00f, 0.15f, 0.000f, 1.000f, 0.000f, // Bottom-Top-right X
+		 0.22f,  0.00f, 0.22f, 0.000f, 1.000f, 0.000f, // Bottom-Bottom-right X
+		 0.22f, -0.10f, 0.22f, 0.235f, 0.215f, 0.203f, // Bottom-Bottom-left X
+		-0.10f, -0.10f, 0.22f, 0.235f, 0.215f, 0.203f, // Top-Top-left
+		-0.10f,  0.00f, 0.22f, 0.000f, 1.000f, 0.000f, // Top-Top-right
+		-0.08f,  0.00f, 0.29f, 0.000f, 1.000f, 0.000f, // Top-Bottom-right
+		-0.08f, -0.10f, 0.29f, 0.235f, 0.215f, 0.203f, // Top-Bottom-left
 	};
 
 	const GLfloat buildingBottom[] = {
@@ -305,6 +319,23 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &cubeRightEBO);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeRightEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeElements), cubeElements, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Cube Top
+	glGenVertexArrays(1, &cubeTopVAO);
+	glBindVertexArray(cubeTopVAO);
+	glGenBuffers(1, &cubeTopVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeTopVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeTop), cubeTop, GL_STATIC_DRAW);
+	glGenBuffers(1, &cubeTopEBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeTopEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeElements), cubeElements, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(posAttrib);
@@ -468,14 +499,19 @@ void paintGL(void)
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Rendering
 
-	// Cube
+	// Cube Left
 	transform("cube");
 	glBindVertexArray(cubeLeftVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	// Cube
+	// Cube Right
 	transform("cube");
 	glBindVertexArray(cubeRightVAO);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	// Cube Top
+	transform("cube");
+	glBindVertexArray(cubeTopVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// Building Bottom
