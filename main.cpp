@@ -142,10 +142,10 @@ void sendDataToOpenGL()
 	// Vertices
 	const GLfloat ground[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.6f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
+		 0.6f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
+		 0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
+		-0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
 	};
 
 	const GLfloat cube[] = {
@@ -161,42 +161,42 @@ void sendDataToOpenGL()
 
 	const GLfloat buildingBottom[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.4f,  0.5f, 0.2f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.4f,  0.5f, 0.2f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.4f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.4f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.4f,  0.5f, 0.2f, 0.482f, 0.474f, 0.529f, // Top-left
+		 0.4f,  0.5f, 0.2f, 0.482f, 0.474f, 0.529f, // Top-right
+		 0.4f,  0.5f, 0.0f, 0.482f, 0.474f, 0.529f, // Bottom-right
+		-0.4f,  0.5f, 0.0f, 0.482f, 0.474f, 0.529f  // Bottom-left
 	};
 
 	const GLfloat buildingMiddle[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.45f,  0.45f, 0.3f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.45f,  0.45f, 0.3f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.45f,  0.45f, 0.2f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.45f,  0.45f, 0.2f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.45f,  0.45f, 0.3f, 0.658f, 0.654f, 0.674f, // Top-left
+		 0.45f,  0.45f, 0.3f, 0.658f, 0.654f, 0.674f, // Top-right
+		 0.45f,  0.45f, 0.2f, 0.658f, 0.654f, 0.674f, // Bottom-right
+		-0.45f,  0.45f, 0.2f, 0.658f, 0.654f, 0.674f  // Bottom-left
 	};
 
 	const GLfloat buildingTop[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.5f,  0.42f, 0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.5f,  0.42f, 0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.5f,  0.42f, 0.3f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.5f,  0.42f, 0.3f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.5f,  0.42f, 0.5f, 0.713f, 0.737f, 0.784f, // Top-left
+		 0.5f,  0.42f, 0.5f, 0.713f, 0.737f, 0.784f, // Top-right
+		 0.5f,  0.42f, 0.3f, 0.713f, 0.737f, 0.784f, // Bottom-right
+		-0.5f,  0.42f, 0.3f, 0.713f, 0.737f, 0.784f  // Bottom-left
 	};
 
 	const GLfloat rooftopBottom[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.3f,  0.5f, 0.6f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.3f,  0.5f, 0.6f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.3f,  0.5f, 0.4f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.3f,  0.5f, 0.4f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.3f,  0.5f, 0.6f, 0.772f, 0.788f, 0.823f, // Top-left
+		 0.3f,  0.5f, 0.6f, 0.772f, 0.788f, 0.823f, // Top-right
+		 0.3f,  0.5f, 0.4f, 0.772f, 0.788f, 0.823f, // Bottom-right
+		-0.3f,  0.5f, 0.4f, 0.772f, 0.788f, 0.823f  // Bottom-left
 	};
 
 	const GLfloat rooftopTop[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.2f,  0.5f, 0.62f, 1.0f, 0.0f, 0.0f, // Top-left
-		 0.2f,  0.5f, 0.62f, 0.0f, 1.0f, 0.0f, // Top-right
-		 0.2f,  0.5f, 0.60f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.2f,  0.5f, 0.60f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.2f,  0.5f, 0.62f, 0.811f, 0.811f, 0.843f, // Top-left
+		 0.2f,  0.5f, 0.62f, 0.811f, 0.811f, 0.843f, // Top-right
+		 0.2f,  0.5f, 0.60f, 0.811f, 0.811f, 0.843f, // Bottom-right
+		-0.2f,  0.5f, 0.60f, 0.811f, 0.811f, 0.843f  // Bottom-left
 	};
 
 	// Indexing
