@@ -142,8 +142,8 @@ void sendDataToOpenGL()
 	// Vertices
 	const GLfloat ground[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.6f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
-		 0.6f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
+		-0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
+		 0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
 		 0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
 		-0.5f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
 	};
@@ -197,6 +197,13 @@ void sendDataToOpenGL()
 		 0.2f,  0.5f, 0.62f, 0.811f, 0.811f, 0.843f, // Top-right
 		 0.2f,  0.5f, 0.60f, 0.811f, 0.811f, 0.843f, // Bottom-right
 		-0.2f,  0.5f, 0.60f, 0.811f, 0.811f, 0.843f  // Bottom-left
+	};
+
+	const GLfloat mountainLeft[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.2f,  0.5f, 0.62f, 0.431f, 0.525f, 0.317f, // Top
+		 0.2f,  0.5f, 0.60f, 0.431f, 0.525f, 0.317f, // Bottom-right
+		-0.2f,  0.5f, 0.60f, 0.431f, 0.525f, 0.317f  // Bottom-left
 	};
 
 	// Indexing
