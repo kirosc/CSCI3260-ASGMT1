@@ -23,6 +23,9 @@ GLuint groundEBO;
 GLuint cubeVAO;
 GLuint cubeVBO;
 GLuint cubeEBO;
+GLuint buildingBottomVAO;
+GLuint buildingBottomVBO;
+GLuint buildingBottomEBO;
 
 float x_delta = 0.1f;
 int x_press_num = 0;
@@ -124,9 +127,7 @@ void keyboard(unsigned char key, int x, int y)
 
 void sendDataToOpenGL()
 {
-	//TODO:
-	//create point, line, 2D object and 3D object here and bind to VAOs & VBOs
-
+	// Vertices
 	const GLfloat ground[] = {
 		// X	 Y	   Z	 R	   G	 B
 		-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Top-left
@@ -143,42 +144,22 @@ void sendDataToOpenGL()
 		-0.1f,  0.0f, 0.1f, 1.0f, 0.0f, 0.0f, // Top-Top-left
 		 0.0f,  0.0f, 0.1f, 0.0f, 1.0f, 0.0f, // Top-Top-right
 		 0.0f, -0.1f, 0.1f, 1.0f, 1.0f, 1.0f, // Top-Bottom-right
-		-0.1f, -0.1f, 0.1f, 0.0f, 0.0f, 1.0f // Top-Bottom-left
+		-0.1f, -0.1f, 0.1f, 0.0f, 0.0f, 1.0f  // Top-Bottom-left
 	};
 
-	// Ground
-	glGenVertexArrays(1, &groundVAO);
-	glBindVertexArray(groundVAO);
-	glGenBuffers(1, &groundVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
-	glGenBuffers(1, &groundEBO); // Element array
+	const GLfloat buildingBottom[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.4f,  0.5f, 0.2f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.4f,  0.5f, 0.2f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.4f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.4f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
 
-	GLuint groundElements[] = {
+	// Indexing
+	GLuint rectangleElements[] = {
 		0, 1, 2,
 		2, 3, 0
 	};
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundElements), groundElements, GL_STATIC_DRAW);
-
-	// Vertex position
-	GLint posAttrib = glGetAttribLocation(programID, "position");
-	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-
-	// Vertex color
-	GLint colAttrib = glGetAttribLocation(programID, "color");
-	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
-
-	// Cube
-	glGenVertexArrays(1, &cubeVAO);
-	glBindVertexArray(cubeVAO);
-	glGenBuffers(1, &cubeVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
-	glGenBuffers(1, &cubeEBO);
 
 	GLuint cubeElements[] = {
 		// Bottom
@@ -201,8 +182,56 @@ void sendDataToOpenGL()
 		0, 1, 5
 	};
 
+	// Ground
+	glGenVertexArrays(1, &groundVAO);
+	glBindVertexArray(groundVAO);
+	glGenBuffers(1, &groundVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ground), ground, GL_STATIC_DRAW);
+	glGenBuffers(1, &groundEBO); // Element array
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
+
+	// Vertex position
+	GLint posAttrib = glGetAttribLocation(programID, "position");
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	// Vertex color
+	GLint colAttrib = glGetAttribLocation(programID, "color");
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Cube
+	glGenVertexArrays(1, &cubeVAO);
+	glBindVertexArray(cubeVAO);
+	glGenBuffers(1, &cubeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	glGenBuffers(1, &cubeEBO);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeElements), cubeElements, GL_STATIC_DRAW);
+
+	// Vertex position
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	// Vertex color
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Buildng Bottom
+	glGenVertexArrays(1, &buildingBottomVAO);
+	glBindVertexArray(buildingBottomVAO);
+	glGenBuffers(1, &buildingBottomVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, buildingBottomVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buildingBottom), buildingBottom, GL_STATIC_DRAW);
+	glGenBuffers(1, &buildingBottomEBO); // Element array
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buildingBottomEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
 
 	// Vertex position
 	glEnableVertexAttribArray(posAttrib);
@@ -262,6 +291,9 @@ void paintGL(void)
 	// Cube
 	transform("cube");
 	glBindVertexArray(cubeVAO);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	glBindVertexArray(buildingBottomVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	glFlush();
