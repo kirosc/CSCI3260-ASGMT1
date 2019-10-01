@@ -26,6 +26,18 @@ GLuint cubeEBO;
 GLuint buildingBottomVAO;
 GLuint buildingBottomVBO;
 GLuint buildingBottomEBO;
+GLuint buildingMiddleVAO;
+GLuint buildingMiddleVBO;
+GLuint buildingMiddleEBO; 
+GLuint buildingTopVAO;
+GLuint buildingTopVBO;
+GLuint buildingTopEBO;
+GLuint rooftopBottomVAO;
+GLuint rooftopBottomVBO;
+GLuint rooftopBottomEBO;
+GLuint rooftopTopVAO;
+GLuint rooftopTopVBO;
+GLuint rooftopTopEBO;
 
 float x_delta = 0.1f;
 int x_press_num = 0;
@@ -155,6 +167,38 @@ void sendDataToOpenGL()
 		-0.4f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
 	};
 
+	const GLfloat buildingMiddle[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.45f,  0.45f, 0.3f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.45f,  0.45f, 0.3f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.45f,  0.45f, 0.2f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.45f,  0.45f, 0.2f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
+
+	const GLfloat buildingTop[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.5f,  0.42f, 0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.5f,  0.42f, 0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.5f,  0.42f, 0.3f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.5f,  0.42f, 0.3f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
+
+	const GLfloat rooftopBottom[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.3f,  0.5f, 0.6f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.3f,  0.5f, 0.6f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.3f,  0.5f, 0.4f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.3f,  0.5f, 0.4f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
+
+	const GLfloat rooftopTop[] = {
+		// X	 Y	   Z	 R	   G	 B
+		-0.2f,  0.5f, 0.62f, 1.0f, 0.0f, 0.0f, // Top-left
+		 0.2f,  0.5f, 0.62f, 0.0f, 1.0f, 0.0f, // Top-right
+		 0.2f,  0.5f, 0.60f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.2f,  0.5f, 0.60f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
+
 	// Indexing
 	GLuint rectangleElements[] = {
 		0, 1, 2,
@@ -214,11 +258,9 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeElements), cubeElements, GL_STATIC_DRAW);
 
-	// Vertex position
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
-	// Vertex color
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 
@@ -228,16 +270,82 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &buildingBottomVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, buildingBottomVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(buildingBottom), buildingBottom, GL_STATIC_DRAW);
-	glGenBuffers(1, &buildingBottomEBO); // Element array
+	glGenBuffers(1, &buildingBottomEBO);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buildingBottomEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
 
-	// Vertex position
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
-	// Vertex color
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Buildng Middle
+	glGenVertexArrays(1, &buildingMiddleVAO);
+	glBindVertexArray(buildingMiddleVAO);
+	glGenBuffers(1, &buildingMiddleVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, buildingMiddleVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buildingMiddle), buildingMiddle, GL_STATIC_DRAW);
+	glGenBuffers(1, &buildingMiddleEBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buildingMiddleEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Buildng Top
+	glGenVertexArrays(1, &buildingTopVAO);
+	glBindVertexArray(buildingTopVAO);
+	glGenBuffers(1, &buildingTopVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, buildingTopVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buildingTop), buildingTop, GL_STATIC_DRAW);
+	glGenBuffers(1, &buildingTopEBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buildingTopEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Rooftop Bottom
+	glGenVertexArrays(1, &rooftopBottomVAO);
+	glBindVertexArray(rooftopBottomVAO);
+	glGenBuffers(1, &rooftopBottomVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, rooftopBottomVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rooftopBottom), rooftopBottom, GL_STATIC_DRAW);
+	glGenBuffers(1, &rooftopBottomEBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rooftopBottomEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+
+	// Rooftop Top
+	glGenVertexArrays(1, &rooftopTopVAO);
+	glBindVertexArray(rooftopTopVAO);
+	glGenBuffers(1, &rooftopTopVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, rooftopTopVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rooftopTop), rooftopTop, GL_STATIC_DRAW);
+	glGenBuffers(1, &rooftopTopEBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rooftopTopEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleElements), rectangleElements, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
 
@@ -273,8 +381,6 @@ void transform(string name) {
 
 void paintGL(void)
 {
-	//TODO:
-	//render your objects and control the transformation here
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -283,7 +389,6 @@ void paintGL(void)
 	uniTrans = glGetUniformLocation(programID, "model");
 
 	// Ground
-
 	transform("ground");
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Rendering
@@ -293,8 +398,25 @@ void paintGL(void)
 	glBindVertexArray(cubeVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+	// Building Bottom
 	glBindVertexArray(buildingBottomVAO);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Building Middle
+	glBindVertexArray(buildingMiddleVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Building Top
+	glBindVertexArray(buildingTopVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Rooftop Bottom
+	glBindVertexArray(rooftopBottomVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	// Rooftop Top
+	glBindVertexArray(rooftopTopVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glFlush();
 	glutPostRedisplay();
