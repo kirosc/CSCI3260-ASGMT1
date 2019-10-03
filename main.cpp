@@ -50,8 +50,13 @@ GLuint mountainLeftVBO;
 GLuint mountainRightVAO;
 GLuint mountainRightVBO;
 
+GLfloat sun_x = -0.55f;
+GLfloat sun_y =  0.71f;
+GLfloat sun_z =  0.52f;
+
 float x_delta = 0.1f;
 int x_press_num = 0;
+int scene_press_num = 0;
 
 bool checkStatus(
 	GLuint objectID,
@@ -141,10 +146,23 @@ void keyboard(unsigned char key, int x, int y)
 	if (key == 'a')
 	{
 		x_press_num -= 1;
-	}
-	if (key == 'd')
+	} 
+	else if (key == 'd')
 	{
 		x_press_num += 1;
+	}
+	else if (key == 'u')
+	{
+		scene_press_num = 1;
+		sun_z -= 0.01f;
+	}
+	else if (key == 'b') 
+	{
+		static int back;
+		back ^= 1;
+		GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f } };
+		glClearColor(colors[0][0], colors[0][1], colors[0][2], 1.0f);
+		glutPostRedisplay();
 	}
 }
 
@@ -153,8 +171,8 @@ void sendDataToOpenGL()
 	// Vertices
 	const GLfloat ground[] = {
 		// X	 Y	   Z	 R	   G	 B
-		-0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
-		 0.67f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
+		-0.68f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
+		 0.68f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
 		 0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
 		-0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
 	};
@@ -460,7 +478,7 @@ void sendDataToOpenGL()
 
 	// Set up view transformation
 	mat4 view = lookAt(
-		vec3(0.0f, -1.2f,  0.7f),	// Position of the camera
+		vec3(0.0f, -1.2f,  0.8f),	// Position of the camera
 		vec3(0.0f,  0.5f,  0.0f),	// The point to be centered on-screen
 		vec3(0.0f,  1.0f,  0.0f)	// The up axis
 	);
@@ -488,7 +506,6 @@ void transform(string name) {
 
 void paintGL(void)
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //specify the background color
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -501,64 +518,68 @@ void paintGL(void)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // Rendering
 
 	// Cube Left
-	transform("cube");
+	transform("cubeLeft");
 	glBindVertexArray(cubeLeftVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// Cube Right
-	transform("cube");
+	transform("cubeRight");
 	glBindVertexArray(cubeRightVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// Cube Top
-	transform("cube");
+	transform("cubeTop");
 	glBindVertexArray(cubeTopVAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	// Building Bottom
+	transform("buildingBottom");
 	glBindVertexArray(buildingBottomVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	// Building Middle
+	transform("buildingMiddle");
 	glBindVertexArray(buildingMiddleVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	// Building Top
+	transform("buildingTop");
 	glBindVertexArray(buildingTopVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	// Rooftop Bottom
+	transform("rooftopBottom");
 	glBindVertexArray(rooftopBottomVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	// Rooftop Top
+	transform("rooftopTop");
 	glBindVertexArray(rooftopTopVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	// Mountain Left
+	transform("mountainLeft");
 	glBindVertexArray(mountainLeftVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	// Mountain Right
+	transform("mountainRight");
 	glBindVertexArray(mountainRightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	
 	// Sun
-	GLfloat x = -0.50f;
-	GLfloat y =  0.50f;
-	GLfloat z =  0.57f;
 	GLfloat radius = 0.05f;
-	GLfloat twicePi = 2.0f * PI;
+	GLfloat twicePi = 2.0f * (GLfloat) PI;
 
 	int triangleAmount = 20; //# of triangles used to draw circle
 
 	glBegin(GL_TRIANGLE_FAN);
-	glVertex3f(x, y, z); // center of circle
+	glVertex3f(sun_x, sun_y, sun_z); // center of circle
 	for (int i = 0; i <= triangleAmount; i++) {
 		glVertex3f(
-			x + (radius * cos(i * twicePi / triangleAmount)),
-			y,
-			z + (radius * sin(i * twicePi / triangleAmount))
+			sun_x + (radius * cos(i * twicePi / triangleAmount)),
+			sun_y,
+			sun_z + (radius * sin(i * twicePi / triangleAmount))
 		);
 	}
 	glEnd();
