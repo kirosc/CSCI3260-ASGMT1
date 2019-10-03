@@ -4,6 +4,7 @@
 ////Student ID:
 
 #define PI 3.1415926535897932384626433832795
+#define BUFFER_OFFSET(i) ((char *)NULL + (i * sizeof(float)))
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include "Dependencies\glm\glm.hpp"
@@ -310,7 +311,7 @@ void sendDataToOpenGL()
 	// Vertex color
 	GLint colAttrib = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Cube Left
 	glGenVertexArrays(1, &cubeLeftVAO);
@@ -327,7 +328,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Cube Right
 	glGenVertexArrays(1, &cubeRightVAO);
@@ -344,7 +345,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Cube Top
 	glGenVertexArrays(1, &cubeTopVAO);
@@ -361,7 +362,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Buildng Bottom
 	glGenVertexArrays(1, &buildingBottomVAO);
@@ -378,7 +379,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Buildng Middle
 	glGenVertexArrays(1, &buildingMiddleVAO);
@@ -395,7 +396,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Buildng Top
 	glGenVertexArrays(1, &buildingTopVAO);
@@ -412,7 +413,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Rooftop Bottom
 	glGenVertexArrays(1, &rooftopBottomVAO);
@@ -429,7 +430,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Rooftop Top
 	glGenVertexArrays(1, &rooftopTopVAO);
@@ -446,7 +447,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Mountain Left
 	glGenVertexArrays(1, &mountainLeftVAO);
@@ -459,7 +460,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	// Mountain Right
 	glGenVertexArrays(1, &mountainRightVAO);
@@ -472,7 +473,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	////////////////////////////////////////////////////
 
@@ -498,7 +499,7 @@ void transform(string name) {
 	if (name == "ground") {
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
-	else if (name == "cube") {
+	else if (name == "cubeTop") {
 		model = rotate(mat4(1.0f), x_delta * x_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
@@ -584,6 +585,7 @@ void paintGL(void)
 	}
 	glEnd();
 
+
 	glFlush();
 	glutPostRedisplay();
 }
@@ -607,6 +609,7 @@ int main(int argc, char* argv[])
 	with different events, e.g. window sizing, mouse click or
 	keyboard stroke */
 	initializedGL();
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Paint the background color once
 	glutDisplayFunc(paintGL);
 	glutKeyboardFunc(keyboard);
 
