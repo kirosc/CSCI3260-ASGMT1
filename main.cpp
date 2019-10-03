@@ -160,36 +160,36 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat cubeLeft[] = {
-		-0.2f,  0.0f, 0.00f, 1.000f, 0.000f, 0.000f, // Bottom-Top-left
-		-0.1f,  0.0f, 0.00f, 0.000f, 1.000f, 0.000f, // Bottom-Top-right
+		-0.2f,  0.0f, 0.00f, 0.917f, 0.878f, 0.831f, // Bottom-Top-left
+		-0.1f,  0.0f, 0.00f, 0.909f, 0.827f, 0.729f, // Bottom-Top-right
 		-0.1f, -0.1f, 0.00f, 0.196f, 0.192f, 0.223f, // Bottom-Bottom-right
 		-0.2f, -0.1f, 0.00f, 0.309f, 0.282f, 0.262f, // Bottom-Bottom-left
-		-0.2f,  0.0f, 0.22f, 1.000f, 0.000f, 0.000f, // Top-Top-left
-		-0.1f,  0.0f, 0.22f, 0.000f, 1.000f, 0.000f, // Top-Top-right
+		-0.2f,  0.0f, 0.22f, 0.917f, 0.878f, 0.831f, // Top-Top-left
+		-0.1f,  0.0f, 0.22f, 0.560f, 0.501f, 0.427f, // Top-Top-right
 		-0.1f, -0.1f, 0.22f, 0.235f, 0.215f, 0.203f, // Top-Bottom-right
-		-0.2f, -0.1f, 0.22f, 0.317f, 0.294f, 0.337f  // Top-Bottom-left
+		-0.2f, -0.1f, 0.22f, 0.486f, 0.450f, 0.443f  // Top-Bottom-left
 	};
 
 	const GLfloat cubeRight[] = {
-		 0.1f,  0.0f, 0.00f, 1.0f, 0.0f, 0.0f, // Bottom-Top-left
-		 0.2f,  0.0f, 0.00f, 0.0f, 1.0f, 0.0f, // Bottom-Top-right
+		 0.1f,  0.0f, 0.00f, 0.917f, 0.878f, 0.831f, // Bottom-Top-left
+		 0.2f,  0.0f, 0.00f, 0.909f, 0.827f, 0.729f, // Bottom-Top-right
 		 0.2f, -0.1f, 0.00f, 0.196f, 0.192f, 0.223f, // Bottom-Bottom-right
 		 0.1f, -0.1f, 0.00f, 0.309f, 0.282f, 0.262f, // Bottom-Bottom-left
-		 0.1f,  0.0f, 0.15f, 1.0f, 0.0f, 0.0f, // Top-Top-left
-		 0.2f,  0.0f, 0.15f, 0.0f, 1.0f, 0.0f, // Top-Top-right
+		 0.1f,  0.0f, 0.15f, 0.917f, 0.878f, 0.831f, // Top-Top-left
+		 0.2f,  0.0f, 0.15f, 0.560f, 0.501f, 0.427f, // Top-Top-right
 		 0.2f, -0.1f, 0.15f, 0.235f, 0.215f, 0.203f, // Top-Bottom-right
-		 0.1f, -0.1f, 0.15f, 0.317f, 0.294f, 0.337f  // Top-Bottom-left
+		 0.1f, -0.1f, 0.15f, 0.411f, 0.376f, 0.364f  // Top-Bottom-left
 	};
 
 	const GLfloat cubeTop[] = {
-		 0.20f, -0.10f, 0.15f, 0.235f, 0.215f, 0.203f, // Bottom-Top-left X
-		 0.20f,  0.00f, 0.15f, 0.000f, 1.000f, 0.000f, // Bottom-Top-right X
-		 0.22f,  0.00f, 0.22f, 0.000f, 1.000f, 0.000f, // Bottom-Bottom-right X
-		 0.22f, -0.10f, 0.22f, 0.235f, 0.215f, 0.203f, // Bottom-Bottom-left X
+		 0.20f, -0.10f, 0.15f, 0.235f, 0.215f, 0.203f, // Bottom-Top-left
+		 0.20f,  0.00f, 0.15f, 0.909f, 0.827f, 0.729f, // Bottom-Top-right
+		 0.22f,  0.00f, 0.22f, 0.560f, 0.501f, 0.427f, // Bottom-Bottom-right
+		 0.22f, -0.10f, 0.22f, 0.235f, 0.215f, 0.203f, // Bottom-Bottom-left
 		-0.10f, -0.10f, 0.22f, 0.235f, 0.215f, 0.203f, // Top-Top-left
-		-0.10f,  0.00f, 0.22f, 0.000f, 1.000f, 0.000f, // Top-Top-right
-		-0.08f,  0.00f, 0.29f, 0.000f, 1.000f, 0.000f, // Top-Bottom-right
-		-0.08f, -0.10f, 0.29f, 0.235f, 0.215f, 0.203f, // Top-Bottom-left
+		-0.10f,  0.00f, 0.22f, 0.917f, 0.878f, 0.831f, // Top-Top-right
+		-0.08f,  0.00f, 0.29f, 0.917f, 0.878f, 0.831f, // Top-Bottom-right
+		-0.08f, -0.10f, 0.29f, 0.560f, 0.501f, 0.427f, // Top-Bottom-left
 	};
 
 	const GLfloat buildingBottom[] = {
@@ -544,9 +544,9 @@ void paintGL(void)
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	
 	// Sun
-	GLfloat x = 0.50f;
-	GLfloat y = 0.50f;
-	GLfloat z = 0.57f;
+	GLfloat x = -0.50f;
+	GLfloat y =  0.50f;
+	GLfloat z =  0.57f;
 	GLfloat radius = 0.05f;
 	GLfloat twicePi = 2.0f * PI;
 
