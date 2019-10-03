@@ -55,8 +55,11 @@ GLfloat sun_x = -0.55f;
 GLfloat sun_y =  0.71f;
 GLfloat sun_z =  0.52f;
 
-float x_delta = 0.1f;
-int x_press_num = 0;
+// Variable for keyboard actions
+float rotate_delta = 0.1f;
+float translate_delta = 0.01f;
+int rotate_press_num = 0;
+int translate_press_num = 0;
 int scene_press_num = 0;
 
 bool checkStatus(
@@ -144,13 +147,21 @@ void installShaders()
 
 void keyboard(unsigned char key, int x, int y)
 {
-	if (key == 'a')
+	if (key == 'q')
 	{
-		x_press_num -= 1;
+		rotate_press_num -= 1;
 	} 
+	else if (key == 'e')
+	{
+		rotate_press_num += 1;
+	}
+	else if (key == 'a')
+	{
+		translate_press_num -= 1;
+	}
 	else if (key == 'd')
 	{
-		x_press_num += 1;
+		translate_press_num += 1;
 	}
 	else if (key == 'u')
 	{
@@ -496,11 +507,12 @@ void sendDataToOpenGL()
 // Transform the object based on the given name
 void transform(string name) {
 	mat4 model = mat4(1.0f);
-	if (name == "ground") {
+	if (name == "cubeTop" || name == "cubeLeft" || name == "cubeRight") {
+		model = glm::rotate(mat4(1.0f), rotate_delta * rotate_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+		model *= glm::translate(mat4(1.0f), vec3(translate_delta * translate_press_num, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
-	else if (name == "cubeTop") {
-		model = rotate(mat4(1.0f), x_delta * x_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+	else {
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
 }
