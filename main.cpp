@@ -3,6 +3,7 @@
 ////Name:
 ////Student ID:
 
+#define PI 3.1415926535897932384626433832795
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include "Dependencies\glm\glm.hpp"
@@ -541,6 +542,26 @@ void paintGL(void)
 	// Mountain Right
 	glBindVertexArray(mountainRightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	// Sun
+	GLfloat x = 0.50f;
+	GLfloat y = 0.50f;
+	GLfloat z = 0.57f;
+	GLfloat radius = 0.05f;
+	GLfloat twicePi = 2.0f * PI;
+
+	int triangleAmount = 20; //# of triangles used to draw circle
+
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(x, y, z); // center of circle
+	for (int i = 0; i <= triangleAmount; i++) {
+		glVertex3f(
+			x + (radius * cos(i * twicePi / triangleAmount)),
+			y,
+			z + (radius * sin(i * twicePi / triangleAmount))
+		);
+	}
+	glEnd();
 
 	glFlush();
 	glutPostRedisplay();
