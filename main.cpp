@@ -50,17 +50,16 @@ GLuint mountainLeftVAO;
 GLuint mountainLeftVBO;
 GLuint mountainRightVAO;
 GLuint mountainRightVBO;
-
-GLfloat sun_x = -0.55f;
-GLfloat sun_y =  0.71f;
-GLfloat sun_z =  0.52f;
+GLuint sunVAO;
+GLuint sunVBO;
 
 // Variable for keyboard actions
 float rotate_delta = 0.1f;
 float translate_delta = 0.01f;
+float scale_delta = 1.0f;
+float scale_press_num = 1.0f;
 int rotate_press_num = 0;
 int translate_press_num = 0;
-int scene_press_num = 0;
 
 bool checkStatus(
 	GLuint objectID,
@@ -155,6 +154,14 @@ void keyboard(unsigned char key, int x, int y)
 	{
 		rotate_press_num += 1;
 	}
+	else if (key == 'w')
+	{
+		scale_press_num *= 1.01;
+	}
+	else if (key == 's')
+	{
+		scale_press_num *= 0.99;
+	}
 	else if (key == 'a')
 	{
 		translate_press_num -= 1;
@@ -165,8 +172,6 @@ void keyboard(unsigned char key, int x, int y)
 	}
 	else if (key == 'u')
 	{
-		scene_press_num = 1;
-		sun_z -= 0.01f;
 	}
 	else if (key == 'b') 
 	{
@@ -486,6 +491,49 @@ void sendDataToOpenGL()
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
+	// Sun
+	glGenVertexArrays(1, &sunVAO);
+	glBindVertexArray(sunVAO);
+	glGenBuffers(1, &sunVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, sunVBO);
+	GLfloat x = 0.0f;
+	GLfloat y = 0.1f;
+	GLfloat z = 0.5f;
+	GLfloat radius = 0.1f;
+	const int numberOfVertices = 52;
+	const int numberOfSides = 50;
+
+	GLfloat twicePi = 2.0f * PI;
+
+	GLfloat circleVerticesX[numberOfVertices];
+	GLfloat circleVerticesY[numberOfVertices];
+	GLfloat circleVerticesZ[numberOfVertices];
+
+	circleVerticesX[0] = x;
+	circleVerticesY[0] = y;
+	circleVerticesZ[0] = z;
+
+	// Calculate the vertices position
+	for (int i = 1; i < numberOfVertices; i++)
+	{
+		circleVerticesX[i] = x + (radius * cos(i * twicePi / numberOfSides));
+		circleVerticesY[i] = y;
+		circleVerticesZ[i] = z + (radius * sin(i * twicePi / numberOfSides));
+	}
+
+	GLfloat allCircleVertices[(numberOfVertices) * 3];
+
+	// Assign the position to the GLfloat array
+	for (int i = 0; i < numberOfVertices; i++)
+	{
+		allCircleVertices[i * 3] = circleVerticesX[i];
+		allCircleVertices[(i * 3) + 1] = circleVerticesY[i];
+		allCircleVertices[(i * 3) + 2] = circleVerticesZ[i];
+	}
+	glBufferData(GL_ARRAY_BUFFER, sizeof(allCircleVertices), allCircleVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+
 	////////////////////////////////////////////////////
 
 	// Set up view transformation
@@ -510,6 +558,11 @@ void transform(string name) {
 	if (name == "cubeTop" || name == "cubeLeft" || name == "cubeRight") {
 		model = glm::rotate(mat4(1.0f), rotate_delta * rotate_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
 		model *= glm::translate(mat4(1.0f), vec3(translate_delta * translate_press_num, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
+	}
+	else if (name == "mountainLeft" || name == "mountainRight")
+	{
+		model = glm::scale(mat4(1.0f), vec3(scale_delta * scale_press_num, 1.0f, scale_delta * scale_press_num));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
 	else {
@@ -579,24 +632,10 @@ void paintGL(void)
 	transform("mountainRight");
 	glBindVertexArray(mountainRightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-	
-	// Sun
-	GLfloat radius = 0.05f;
-	GLfloat twicePi = 2.0f * (GLfloat) PI;
 
-	int triangleAmount = 20; //# of triangles used to draw circle
 
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex3f(sun_x, sun_y, sun_z); // center of circle
-	for (int i = 0; i <= triangleAmount; i++) {
-		glVertex3f(
-			sun_x + (radius * cos(i * twicePi / triangleAmount)),
-			sun_y,
-			sun_z + (radius * sin(i * twicePi / triangleAmount))
-		);
-	}
-	glEnd();
-
+	glBindVertexArray(sunVAO);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
 
 	glFlush();
 	glutPostRedisplay();
