@@ -38,7 +38,7 @@ GLuint buildingBottomVBO;
 GLuint buildingBottomEBO;
 GLuint buildingMiddleVAO;
 GLuint buildingMiddleVBO;
-GLuint buildingMiddleEBO; 
+GLuint buildingMiddleEBO;
 GLuint buildingTopVAO;
 GLuint buildingTopVBO;
 GLuint buildingTopEBO;
@@ -151,7 +151,7 @@ void keyboard(unsigned char key, int x, int y)
 	if (key == 'q')
 	{
 		rotate_press_num -= 1;
-	} 
+	}
 	else if (key == 'e')
 	{
 		rotate_press_num += 1;
@@ -175,7 +175,7 @@ void keyboard(unsigned char key, int x, int y)
 	else if (key == 'u')
 	{
 	}
-	else if (key == 'b') 
+	else if (key == 'b')
 	{
 		static int back;
 		back ^= 1;
@@ -185,7 +185,9 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }
 
-void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides, vector<GLfloat> &allCircleVertices) {
+void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b,
+	GLfloat radius, GLint numberOfSides, vector<GLfloat>& allCircleVertices) 
+{
 	const int numberOfVertices = numberOfSides + 2;
 
 	GLfloat twicePi = 2.0f * M_PI;
@@ -212,6 +214,9 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfS
 		allCircleVertices.push_back(circleVerticesX[i]);
 		allCircleVertices.push_back(circleVerticesY[i]);
 		allCircleVertices.push_back(circleVerticesZ[i]);
+		allCircleVertices.push_back(r);
+		allCircleVertices.push_back(g);
+		allCircleVertices.push_back(b);
 	}
 }
 
@@ -529,20 +534,23 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &sunVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, sunVBO);
 	vector <GLfloat> sunVector;	// Create a vector for vertices position
-	drawCircle(-0.55f, 0.71f, 0.52f, 0.05f, 50, sunVector);
+	drawCircle(-0.55f, 0.71f, 0.52f, 1.0f, 0.0f, 1.0f, 0.05f, 50, sunVector);
 	GLfloat* sun = sunVector.data(); // Return pointer of an array of vertices
-	
 	glBufferData(GL_ARRAY_BUFFER, sunVector.size() * sizeof(float), sun, GL_STATIC_DRAW);
+
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
 	////////////////////////////////////////////////////
 
 	// Set up view transformation
 	mat4 view = lookAt(
-		vec3(0.0f, -1.2f,  0.8f),	// Position of the camera
-		vec3(0.0f,  0.5f,  0.0f),	// The point to be centered on-screen
-		vec3(0.0f,  1.0f,  0.0f)	// The up axis
+		vec3(0.0f, -1.2f, 0.8f),	// Position of the camera
+		vec3(0.0f, 0.5f, 0.0f),	// The point to be centered on-screen
+		vec3(0.0f, 1.0f, 0.0f)	// The up axis
 	);
 	GLint uniView = glGetUniformLocation(programID, "view");
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, value_ptr(view));
