@@ -54,14 +54,21 @@ GLuint mountainRightVAO;
 GLuint mountainRightVBO;
 GLuint sunVAO;
 GLuint sunVBO;
+GLuint moonVAO;
+GLuint moonVBO;
+GLuint moonMaskVAO;
+GLuint moonMaskVBO;
 
 // Variable for keyboard actions
 float rotate_delta = 0.1f;
 float translate_delta = 0.01f;
 float scale_delta = 1.0f;
 float scale_press_num = 1.0f;
+float scene_delta = 0.01f;
 int rotate_press_num = 0;
 int translate_press_num = 0;
+int scene_press_num = 0;
+bool scene_reverse = false;
 
 bool checkStatus(
 	GLuint objectID,
@@ -150,11 +157,11 @@ void keyboard(unsigned char key, int x, int y)
 {
 	if (key == 'q')
 	{
-		rotate_press_num -= 1;
+		rotate_press_num--;
 	}
 	else if (key == 'e')
 	{
-		rotate_press_num += 1;
+		rotate_press_num++;
 	}
 	else if (key == 'w')
 	{
@@ -166,11 +173,22 @@ void keyboard(unsigned char key, int x, int y)
 	}
 	else if (key == 'a')
 	{
-		translate_press_num -= 1;
+		translate_press_num--;
 	}
 	else if (key == 'd')
 	{
-		translate_press_num += 1;
+		translate_press_num++;
+	}
+	else if (key == 'r')
+	{
+		scene_reverse ? scene_press_num-- : scene_press_num++;
+		// Reverse the animation direction
+		if (scene_press_num == 42) {
+			scene_reverse = true;
+		}
+		else if (scene_reverse && scene_press_num == 0) {
+			scene_reverse = false;
+		}
 	}
 	else if (key == 'u')
 	{
@@ -534,9 +552,41 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &sunVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, sunVBO);
 	vector <GLfloat> sunVector;	// Create a vector for vertices position
-	drawCircle(-0.55f, 0.71f, 0.52f, 1.0f, 0.0f, 1.0f, 0.05f, 50, sunVector);
+	drawCircle(-0.55f, 0.71f, 0.55f, 1.0f, 0.0f, 0.0f, 0.05f, 50, sunVector);
 	GLfloat* sun = sunVector.data(); // Return pointer of an array of vertices
 	glBufferData(GL_ARRAY_BUFFER, sunVector.size() * sizeof(float), sun, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
+
+	// Moon
+	glGenVertexArrays(1, &moonVAO);
+	glBindVertexArray(moonVAO);
+	glGenBuffers(1, &moonVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, moonVBO);
+	vector <GLfloat> moonVector;
+	drawCircle(-0.55f, 0.71f, 0.97f, 0.921f, 0.784f, 0.082f, 0.05f, 50, moonVector);
+	GLfloat* moon = moonVector.data();
+	glBufferData(GL_ARRAY_BUFFER, moonVector.size() * sizeof(float), moon, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
+
+	// Moon mask
+	glGenVertexArrays(1, &moonMaskVAO);
+	glBindVertexArray(moonMaskVAO);
+	glGenBuffers(1, &moonMaskVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, moonMaskVBO);
+	vector <GLfloat> moonMaskVector;
+	drawCircle(-0.53f, 0.701f, 0.99f, 1.0f, 1.0f, 1.0f, 0.05f, 50, moonMaskVector);
+	GLfloat* moonMask = moonMaskVector.data();
+	glBufferData(GL_ARRAY_BUFFER, moonMaskVector.size() * sizeof(float), moonMask, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
@@ -573,6 +623,16 @@ void transform(string name) {
 	else if (name == "mountainLeft" || name == "mountainRight")
 	{
 		model = glm::scale(mat4(1.0f), vec3(scale_delta * scale_press_num, 1.0f, scale_delta * scale_press_num));
+		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
+	}
+	else if (name == "sun")
+	{
+		model *= glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -scene_delta * scene_press_num));
+		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
+	}
+	else if (name == "moon" || name == "moonMask")
+	{
+		model *= glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -scene_delta * scene_press_num));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
 	else {
@@ -643,7 +703,19 @@ void paintGL(void)
 	glBindVertexArray(mountainRightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
+	// Sun
+	transform("sun");
 	glBindVertexArray(sunVAO);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
+
+	// Moon
+	transform("moon");
+	glBindVertexArray(moonVAO);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
+
+	// Moon Mask
+	transform("moonMask");
+	glBindVertexArray(moonMaskVAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
 
 	glFlush();
