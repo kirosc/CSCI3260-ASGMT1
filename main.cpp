@@ -3,8 +3,8 @@
 ////Name:
 ////Student ID:
 
-#define PI 3.1415926535897932384626433832795
 #define BUFFER_OFFSET(i) ((char *)NULL + (i * sizeof(float)))
+#define _USE_MATH_DEFINES
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include "Dependencies\glm\glm.hpp"
@@ -12,6 +12,8 @@
 #include "Dependencies\glm\gtc\type_ptr.hpp"
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <cmath>
 using namespace std;
 using glm::vec3;
 using glm::mat4;
@@ -180,6 +182,36 @@ void keyboard(unsigned char key, int x, int y)
 		GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f } };
 		glClearColor(colors[0][0], colors[0][1], colors[0][2], 1.0f);
 		glutPostRedisplay();
+	}
+}
+
+void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides, vector<GLfloat> &allCircleVertices) {
+	const int numberOfVertices = numberOfSides + 2;
+
+	GLfloat twicePi = 2.0f * M_PI;
+
+	GLfloat* circleVerticesX = new GLfloat[numberOfVertices];
+	GLfloat* circleVerticesY = new GLfloat[numberOfVertices];
+	GLfloat* circleVerticesZ = new GLfloat[numberOfVertices];
+
+	circleVerticesX[0] = x;
+	circleVerticesY[0] = y;
+	circleVerticesZ[0] = z;
+
+	// Calculate the vertices position
+	for (int i = 1; i < numberOfVertices; i++)
+	{
+		circleVerticesX[i] = x + (radius * cos(i * twicePi / numberOfSides));
+		circleVerticesY[i] = y;
+		circleVerticesZ[i] = z + (radius * sin(i * twicePi / numberOfSides));
+	}
+
+	// Assign the position to the GLfloat array
+	for (int i = 0; i < numberOfVertices; i++)
+	{
+		allCircleVertices.push_back(circleVerticesX[i]);
+		allCircleVertices.push_back(circleVerticesY[i]);
+		allCircleVertices.push_back(circleVerticesZ[i]);
 	}
 }
 
@@ -496,41 +528,11 @@ void sendDataToOpenGL()
 	glBindVertexArray(sunVAO);
 	glGenBuffers(1, &sunVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, sunVBO);
-	GLfloat x = 0.0f;
-	GLfloat y = 0.1f;
-	GLfloat z = 0.5f;
-	GLfloat radius = 0.1f;
-	const int numberOfVertices = 52;
-	const int numberOfSides = 50;
-
-	GLfloat twicePi = 2.0f * PI;
-
-	GLfloat circleVerticesX[numberOfVertices];
-	GLfloat circleVerticesY[numberOfVertices];
-	GLfloat circleVerticesZ[numberOfVertices];
-
-	circleVerticesX[0] = x;
-	circleVerticesY[0] = y;
-	circleVerticesZ[0] = z;
-
-	// Calculate the vertices position
-	for (int i = 1; i < numberOfVertices; i++)
-	{
-		circleVerticesX[i] = x + (radius * cos(i * twicePi / numberOfSides));
-		circleVerticesY[i] = y;
-		circleVerticesZ[i] = z + (radius * sin(i * twicePi / numberOfSides));
-	}
-
-	GLfloat allCircleVertices[(numberOfVertices) * 3];
-
-	// Assign the position to the GLfloat array
-	for (int i = 0; i < numberOfVertices; i++)
-	{
-		allCircleVertices[i * 3] = circleVerticesX[i];
-		allCircleVertices[(i * 3) + 1] = circleVerticesY[i];
-		allCircleVertices[(i * 3) + 2] = circleVerticesZ[i];
-	}
-	glBufferData(GL_ARRAY_BUFFER, sizeof(allCircleVertices), allCircleVertices, GL_STATIC_DRAW);
+	vector <GLfloat> sunVector;	// Create a vector for vertices position
+	drawCircle(-0.55f, 0.71f, 0.52f, 0.05f, 50, sunVector);
+	GLfloat* sun = sunVector.data(); // Return pointer of an array of vertices
+	
+	glBufferData(GL_ARRAY_BUFFER, sunVector.size() * sizeof(float), sun, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 
@@ -632,7 +634,6 @@ void paintGL(void)
 	transform("mountainRight");
 	glBindVertexArray(mountainRightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-
 
 	glBindVertexArray(sunVAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
