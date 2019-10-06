@@ -56,8 +56,6 @@ GLuint sunVAO;
 GLuint sunVBO;
 GLuint moonVAO;
 GLuint moonVBO;
-GLuint moonMaskVAO;
-GLuint moonMaskVBO;
 
 // Variable for keyboard actions
 float rotate_delta = 0.1f;
@@ -560,7 +558,7 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &sunVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, sunVBO);
 	vector <GLfloat> sunVector;	// Create a vector for vertices position
-	drawCircle(-0.55f, 0.71f, 0.55f, 1.0f, 0.0f, 0.0f, 0.05f, 50, sunVector);
+	drawCircle(-0.55f, 0.71f, 0.55f, 0.756f, 0.149f, 0.0f, 0.05f, 50, sunVector);
 	GLfloat* sun = sunVector.data(); // Return pointer of an array of vertices
 	glBufferData(GL_ARRAY_BUFFER, sunVector.size() * sizeof(float), sun, GL_STATIC_DRAW);
 
@@ -579,22 +577,6 @@ void sendDataToOpenGL()
 	drawCircle(-0.55f, 0.71f, 0.97f, 0.921f, 0.784f, 0.082f, 0.05f, 50, moonVector);
 	GLfloat* moon = moonVector.data();
 	glBufferData(GL_ARRAY_BUFFER, moonVector.size() * sizeof(float), moon, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-
-	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
-
-	// Moon mask
-	glGenVertexArrays(1, &moonMaskVAO);
-	glBindVertexArray(moonMaskVAO);
-	glGenBuffers(1, &moonMaskVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, moonMaskVBO);
-	vector <GLfloat> moonMaskVector;
-	drawCircle(-0.53f, 0.701f, 0.99f, 1.0f, 1.0f, 1.0f, 0.05f, 50, moonMaskVector);
-	GLfloat* moonMask = moonMaskVector.data();
-	glBufferData(GL_ARRAY_BUFFER, moonMaskVector.size() * sizeof(float), moonMask, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
@@ -638,7 +620,7 @@ void transform(string name) {
 		model *= glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -scene_delta * scene_press_num));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
-	else if (name == "moon" || name == "moonMask")
+	else if (name == "moon")
 	{
 		model *= glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -scene_delta * scene_press_num));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
@@ -719,11 +701,6 @@ void paintGL(void)
 	// Moon
 	transform("moon");
 	glBindVertexArray(moonVAO);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
-
-	// Moon Mask
-	transform("moonMask");
-	glBindVertexArray(moonMaskVAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
 
 	glFlush();
