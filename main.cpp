@@ -188,6 +188,7 @@ void keyboard(unsigned char key, int x, int y)
 			scene_reverse = false;
 		}
 
+		// Change the background color gradually
 		static int back;
 		back ^= 1;
 		GLfloat colors[][3] = { {1.0f, 1.0f, 1.0f}, {0.098f, 0.098f, 0.439f} };
@@ -207,11 +208,17 @@ void keyboard(unsigned char key, int x, int y)
 		glClearColor(r, g, b, 1.0f);
 		glutPostRedisplay();
 	}
+	else if (key == 27)
+	{
+		// Exit the program gracefully
+		glutLeaveMainLoop();
+	}
 }
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b,
 	GLfloat radius, GLint numberOfSides, vector<GLfloat>& allCircleVertices) 
 {
+	// Since we use GL_TRIANGLE_FAN, we need to add two.
 	const int numberOfVertices = numberOfSides + 2;
 
 	GLfloat twicePi = 2.0f * M_PI;
@@ -232,7 +239,7 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b
 		circleVerticesZ[i] = z + (radius * sin(i * twicePi / numberOfSides));
 	}
 
-	// Assign the position to the GLfloat array
+	// Assign the position and color to the GLfloat array
 	for (int i = 0; i < numberOfVertices; i++)
 	{
 		allCircleVertices.push_back(circleVerticesX[i]);
@@ -248,11 +255,11 @@ void sendDataToOpenGL()
 {
 	// Vertices
 	const GLfloat ground[] = {
-		// X	 Y	   Z	 R	   G	 B
-		-0.68f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-left
-		 0.68f,  0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Top-right
-		 0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f, // Bottom-right
-		-0.50f, -0.5f, 0.0f, 0.827f, 0.815f, 0.788f  // Bottom-left
+		// X	  Y	    Z	     R	     G	     B
+		-0.68f,  0.50f, 0.00f, 0.827f, 0.815f, 0.788f, // Top-left
+		 0.68f,  0.50f, 0.00f, 0.827f, 0.815f, 0.788f, // Top-right
+		 0.50f, -0.50f, 0.00f, 0.827f, 0.815f, 0.788f, // Bottom-right
+		-0.50f, -0.50f, 0.00f, 0.827f, 0.815f, 0.788f  // Bottom-left
 	};
 
 	const GLfloat cubeLeft[] = {
@@ -289,7 +296,6 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat buildingBottom[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.4f,  0.5f, 0.2f, 0.482f, 0.474f, 0.529f, // Top-left
 		 0.4f,  0.5f, 0.2f, 0.482f, 0.474f, 0.529f, // Top-right
 		 0.4f,  0.5f, 0.0f, 0.482f, 0.474f, 0.529f, // Bottom-right
@@ -297,7 +303,6 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat buildingMiddle[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.45f,  0.45f, 0.3f, 0.658f, 0.654f, 0.674f, // Top-left
 		 0.45f,  0.45f, 0.3f, 0.658f, 0.654f, 0.674f, // Top-right
 		 0.45f,  0.45f, 0.2f, 0.658f, 0.654f, 0.674f, // Bottom-right
@@ -305,7 +310,6 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat buildingTop[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.5f,  0.42f, 0.5f, 0.713f, 0.737f, 0.784f, // Top-left
 		 0.5f,  0.42f, 0.5f, 0.713f, 0.737f, 0.784f, // Top-right
 		 0.5f,  0.42f, 0.3f, 0.713f, 0.737f, 0.784f, // Bottom-right
@@ -313,7 +317,6 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat rooftopBottom[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.3f,  0.5f, 0.6f, 0.772f, 0.788f, 0.823f, // Top-left
 		 0.3f,  0.5f, 0.6f, 0.772f, 0.788f, 0.823f, // Top-right
 		 0.3f,  0.5f, 0.4f, 0.772f, 0.788f, 0.823f, // Bottom-right
@@ -321,7 +324,6 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat rooftopTop[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.2f,  0.5f, 0.62f, 0.811f, 0.811f, 0.843f, // Top-left
 		 0.2f,  0.5f, 0.62f, 0.811f, 0.811f, 0.843f, // Top-right
 		 0.2f,  0.5f, 0.60f, 0.811f, 0.811f, 0.843f, // Bottom-right
@@ -329,14 +331,12 @@ void sendDataToOpenGL()
 	};
 
 	const GLfloat mountainLeft[] = {
-		// X	 Y	   Z	 R	   G	 B
 		-0.62f,  0.7f,  0.3f, 0.431f, 0.525f, 0.317f, // Top
 		-0.30f,  0.7f, -0.1f, 0.431f, 0.525f, 0.317f, // Bottom-right
 		-1.00f,  0.7f, -0.1f, 0.431f, 0.525f, 0.317f  // Bottom-left
 	};
 
 	const GLfloat mountainRight[] = {
-		// X	 Y	   Z	 R	   G	 B
 		 0.65f,  0.7f,  0.3f, 0.270f, 0.349f, 0.117f, // Top
 		 0.40f,  0.7f, -0.1f, 0.270f, 0.349f, 0.117f, // Bottom-right
 		 0.90f,  0.7f, -0.1f, 0.270f, 0.349f, 0.117f  // Bottom-left
@@ -584,13 +584,11 @@ void sendDataToOpenGL()
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), BUFFER_OFFSET(3));
 
-	////////////////////////////////////////////////////
-
 	// Set up view transformation
 	mat4 view = lookAt(
 		vec3(0.0f, -1.2f, 0.8f),	// Position of the camera
-		vec3(0.0f, 0.5f, 0.0f),	// The point to be centered on-screen
-		vec3(0.0f, 1.0f, 0.0f)	// The up axis
+		vec3(0.0f, 0.5f, 0.0f),		// The point to be centered on-screen
+		vec3(0.0f, 1.0f, 0.0f)		// The up axis
 	);
 	GLint uniView = glGetUniformLocation(programID, "view");
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, value_ptr(view));
@@ -605,6 +603,7 @@ void sendDataToOpenGL()
 // Transform the object based on the given name
 void transform(string name) {
 	mat4 model = mat4(1.0f);
+
 	if (name == "cubeTop" || name == "cubeLeft" || name == "cubeRight") {
 		model = glm::rotate(mat4(1.0f), rotate_delta * rotate_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
 		model *= glm::translate(mat4(1.0f), vec3(translate_delta * translate_press_num, 0.0f, 0.0f));
