@@ -189,16 +189,24 @@ void keyboard(unsigned char key, int x, int y)
 		else if (scene_reverse && scene_press_num == 0) {
 			scene_reverse = false;
 		}
-	}
-	else if (key == 'u')
-	{
-	}
-	else if (key == 'b')
-	{
+
 		static int back;
 		back ^= 1;
-		GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f } };
-		glClearColor(colors[0][0], colors[0][1], colors[0][2], 1.0f);
+		GLfloat colors[][3] = { {1.0f, 1.0f, 1.0f}, {0.098f, 0.098f, 0.439f} };
+		GLfloat r, g, b;
+		if (scene_press_num == 0)
+		{
+			r = colors[0][0];
+			g = colors[0][1];
+			b = colors[0][2];
+		}
+		else
+		{
+			r = (1 - scene_press_num / 42.0) * colors[0][0] + (scene_press_num / 42.0) * colors[1][0];
+			g = (1 - scene_press_num / 42.0) * colors[0][1] + (scene_press_num / 42.0) * colors[1][1];
+			b = (1 - scene_press_num / 42.0) * colors[0][2] + (scene_press_num / 42.0) * colors[1][2];
+		}
+		glClearColor(r, g, b, 1.0f);
 		glutPostRedisplay();
 	}
 }
