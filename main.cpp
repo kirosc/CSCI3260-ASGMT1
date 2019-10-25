@@ -606,7 +606,7 @@ void transform(string name) {
 
 	if (name == "cubeTop" || name == "cubeLeft" || name == "cubeRight") {
 		model = glm::rotate(mat4(1.0f), rotate_delta * rotate_press_num * glm::radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
-		model *= glm::translate(mat4(1.0f), vec3(translate_delta * translate_press_num, 0.0f, 0.0f));
+		model *= glm::translate(mat4(1.0f), vec3(translate_delta * translate_press_num, 0.0f, -8.0f));
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, value_ptr(model));
 	}
 	else if (name == "mountainLeft" || name == "mountainRight")
